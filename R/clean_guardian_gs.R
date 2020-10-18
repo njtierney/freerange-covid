@@ -3,17 +3,17 @@
 ##' .. content for \details{} ..
 ##'
 ##' @title
-##' @param vic_dhhs
+##' @param daily_cases
 ##' @param gd_orig
 ##' @return
 ##' @author Nicholas Tierney
 ##' @export
-clean_guardian_gs <- function(vic_dhhs, gd_orig) {
+clean_guardian_gs <- function(daily_cases, gd_orig) {
 
   
   k <- 0.1
   
-  if (max(vic_dhhs$date) < (Sys.Date() - 1)) {
+  if (max(daily_cases$date) < (Sys.Date() - 1)) {
     warning("No data yet for yesterday")
   }
   
@@ -33,7 +33,7 @@ clean_guardian_gs <- function(vic_dhhs, gd_orig) {
     # remove two bad dates
     filter(!date %in% as.Date(c("2020-06-06", "2020-06-07"))) %>%
     mutate(date = date - 1) %>%
-    full_join(vic_dhhs, by = "date") %>%
+    full_join(daily_cases, by = "date") %>%
     rename(confirm = cases) %>%
     mutate(
       test_increase = c(tests_conducted_total[1], diff(tests_conducted_total)),
@@ -76,6 +76,8 @@ clean_guardian_gs <- function(vic_dhhs, gd_orig) {
   if (!(Sys.Date() - 2) %in% d$date) {
     stop("No data for day before yesterday")
   }
+  
+  return(d)
   
 
 }

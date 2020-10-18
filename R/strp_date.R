@@ -1,0 +1,1 @@
+strp_date <- function(x) as.Date(strptime(x, format = "%d %b"))

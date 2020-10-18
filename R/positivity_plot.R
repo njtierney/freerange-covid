@@ -10,11 +10,11 @@
 positivity_plot <- function(clean_gd_gs) {
 
   #-----------------Positivity plot------------------
-  hp <- d %>%
+  hp <- clean_gd_gs %>%
     filter(!is.na(ps1)) %>%
     filter(date == max(date))
   
-  pos_line <- d %>%
+  pos_line <- clean_gd_gs %>%
     ggplot(aes(x = date)) +
     geom_line(aes(y = ps1), colour = "steelblue") +
     geom_point(aes(y = pos_raw)) +
@@ -26,7 +26,7 @@ positivity_plot <- function(clean_gd_gs) {
       colour = "steelblue"
     ) +
     scale_y_log10(label = percent_format(accuracy = 0.1)) +
-    xlim(min(d$date), hp$date + 3) +
+    xlim(min(clean_gd_gs$date), hp$date + 3) +
     labs(
       x = "",
       y = "Test positivity (log scale)",
@@ -43,17 +43,7 @@ positivity_plot <- function(clean_gd_gs) {
       )
     )
   
-  svg_png(pos_line,
-          "../img/covid-tracking/victoria-positivity",
-          h = 5,
-          w = 9)
   
-  svg_png(
-    pos_line,
-    "../_site/img/covid-tracking/victoria-positivity",
-    h = 5,
-    w = 9
-  )
+  pos_line
   
-
 }

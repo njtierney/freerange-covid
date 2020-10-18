@@ -10,7 +10,7 @@
 positivity_corrected_plot <- function(clean_gd_gs) {
 
   #--------------------Positivity correction--------------
-  pos_correction <- d %>%
+  pos_correction <- clean_gd_gs %>%
     select(date,
            `Confirmed` = confirm,
            `Positivity-corrected` = cases_corrected) %>%
@@ -31,21 +31,6 @@ positivity_corrected_plot <- function(clean_gd_gs) {
     ) +
     scale_colour_brewer(palette = "Set1")
   
-  svg_png(
-    pos_correction,
-    "../img/covid-tracking/victoria-positivity-correction",
-    h = 5,
-    w = 9
-  )
+  pos_correction
   
-  svg_png(
-    pos_correction,
-    "../_site/img/covid-tracking/victoria-positivity-correction",
-    h = 5,
-    w = 9
-  )
-  
-  
-  
-
 }
