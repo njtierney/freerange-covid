@@ -8,10 +8,7 @@
 ##' @return
 ##' @author Nicholas Tierney
 ##' @export
-clean_guardian_gs <- function(daily_cases, gd_orig) {
-
-  
-  k <- 0.1
+clean_guardian_gs <- function(daily_cases, gd_orig, k) {
   
   if (max(daily_cases$date) < (Sys.Date() - 1)) {
     warning("No data yet for yesterday")
@@ -23,21 +20,32 @@ clean_guardian_gs <- function(daily_cases, gd_orig) {
     # deal with problem of multiple observations some days:
     mutate(date = as.Date(date)) %>%
     group_by(date) %>%
-    summarise(tests_conducted_total = max(tests_conducted_total, na.rm = TRUE)) %>%
-    mutate(tests_conducted_total  = ifelse(tests_conducted_total < 0, NA, tests_conducted_total)) %>%
+    summarise(tests_conducted_total = max(tests_conducted_total, 
+                                          na.rm = TRUE)) %>%
+    mutate(tests_conducted_total  = ifelse(tests_conducted_total < 0, 
+                                           NA, 
+                                           tests_conducted_total)) %>%
     ungroup() %>%
     # correct one typo, missing a zero
-    mutate(tests_conducted_total = ifelse(date == as.Date("2020-07-10"), 1068000, tests_conducted_total)) %>%
+    mutate(tests_conducted_total = ifelse(date == as.Date("2020-07-10"), 
+                                          1068000, 
+                                          tests_conducted_total)) %>%
     # correct another typo or otherwise bad data point
-    mutate(tests_conducted_total = ifelse(date == as.Date("2020-08-08"), NA, tests_conducted_total)) %>%
+    mutate(tests_conducted_total = ifelse(date == as.Date("2020-08-08"), 
+                                          NA, 
+                                          tests_conducted_total)) %>%
     # remove two bad dates
     filter(!date %in% as.Date(c("2020-06-06", "2020-06-07"))) %>%
     mutate(date = date - 1) %>%
     full_join(daily_cases, by = "date") %>%
     rename(confirm = cases) %>%
     mutate(
-      test_increase = c(tests_conducted_total[1], diff(tests_conducted_total)),
-      pos_raw = pmin(1, confirm / test_increase)
+      test_increase = c(tests_conducted_total[1], 
+                        diff(tests_conducted_total)),
+      pos_raw = pmin(1, confirm / test_increase),
+      # NOTE - there are some -ve numbers in the cases, so we'll 
+      # make these missing
+      pos_raw = ifelse(pos_raw < 0, NA, pos_raw)
     ) %>%
     complete(date = seq.Date(min(date), max(date), by = "day"),
              fill = list(confirm = 0)) %>%

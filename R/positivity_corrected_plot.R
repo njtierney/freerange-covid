@@ -7,7 +7,7 @@
 ##' @return
 ##' @author Nicholas Tierney
 ##' @export
-positivity_corrected_plot <- function(clean_gd_gs) {
+positivity_corrected_plot <- function(clean_gd_gs, k, vic_caption) {
 
   #--------------------Positivity correction--------------
   pos_correction <- clean_gd_gs %>%

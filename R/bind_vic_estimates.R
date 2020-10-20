@@ -10,11 +10,11 @@
 bind_vic_estimates <- function(estimate_reff) {
 
   vic_results <- rbind(
-    mutate(estimates_vic$plots$reports$data, 
+    mutate(estimate_reff$plots$reports$data, 
            type = "positivity-adjusted reported cases"),
-    mutate(estimates_vic$plots$infections$data, 
+    mutate(estimate_reff$plots$infections$data, 
            type = "Infections"),
-    mutate(estimates_vic$plots$reff$data, 
+    mutate(estimate_reff$plots$reff$data, 
            type = "Effective reproduction number (R)")
   ) %>%
     as_tibble()

@@ -3,16 +3,22 @@
 ##' .. content for \details{} ..
 ##'
 ##' @title
-##' @param create_pos_corrected_plot
+##' @param clean_gd_gs
+##' @param generation_time
+##' @param incubation_period
+##' @param reporting_delay
+##' @param npi_dates
 ##' @return
 ##' @author Nicholas Tierney
 ##' @export
-estimate_reff <- function(clean_gd_gs) {
-
-  #---------Estimate Reff-------------
-  # see https://www.mja.com.au/journal/2020/victorias-response-resurgence-covid-19-has-averted-9000-37000-cases-july-2020
-  # dates of the major changes - Stage 3 and Stage 4 restrictions on all of Melbourne:
+estimate_reff <- function(clean_gd_gs,
+                          generation_time,
+                          incubation_period,
+                          reporting_delay,
+                          npi_dates) {
   
+  # see https://www.mja.com.au/journal/2020/victorias-response-resurgence-covid-19-has-averted-9000-37000-cases-july-2020
+  # dates of the major changes - Stage 3 + 4 restrictions on all of Melbourne:
   
   d2 <- clean_gd_gs %>%
     mutate(confirm = round(cases_corrected)) %>%
@@ -27,9 +33,9 @@ estimate_reff <- function(clean_gd_gs) {
     generation_time = generation_time,
     delays = list(incubation_period, reporting_delay),
     horizon = 14,
-    samples = 3000,
-    warmup = 600,
-    cores = 4,
+    samples = 10,
+    warmup = 10,
+    cores = 8,
     chains = 4,
     verbose = TRUE,
     adapt_delta = 0.95,
@@ -42,7 +48,6 @@ estimate_reff <- function(clean_gd_gs) {
   }
   
   return(estimates_vic)
-  
   
 
 }
