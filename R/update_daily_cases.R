@@ -9,6 +9,8 @@
 ##' @export
 update_daily_cases <- function() {
 
+  covidlive_url <- "https://covidlive.com.au/report/daily-cases/vic"
+  
   covidlive_raw <- covidlive_url %>% 
     bow() %>% 
     scrape() %>% 
@@ -19,10 +21,14 @@ update_daily_cases <- function() {
   covidlive_raw %>% 
     mutate(DATE = strp_date(DATE),
            CASES = parse_number(CASES),
-           NET = parse_number(NET)) %>% 
-    select(-VAR) %>% 
+           NET = suppressWarnings(parse_number(NET))) %>% 
     clean_names() %>% 
+    select(-var,
+           -cases) %>% 
     rename(cases = net) %>% 
-    select(date, cases)
+    select(date, cases) %>% 
+  # need to alter negatives into 0 for the time being
+    mutate(cases = if_else(cases < 0, 0, cases))
+    
 
 }
