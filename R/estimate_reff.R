@@ -15,7 +15,11 @@ estimate_reff <- function(clean_gd_gs,
                           generation_time,
                           incubation_period,
                           reporting_delay,
-                          npi_dates) {
+                          npi_dates,
+                          n_samples,
+                          n_warmup,
+                          n_cores,
+                          n_chains) {
   
   # see https://www.mja.com.au/journal/2020/victorias-response-resurgence-covid-19-has-averted-9000-37000-cases-july-2020
   # dates of the major changes - Stage 3 + 4 restrictions on all of Melbourne:
@@ -33,10 +37,10 @@ estimate_reff <- function(clean_gd_gs,
     generation_time = generation_time,
     delays = list(incubation_period, reporting_delay),
     horizon = 14,
-    samples = 10,
-    warmup = 10,
-    cores = 8,
-    chains = 4,
+    samples = n_samples,
+    warmup = n_warmup,
+    cores = n_cores,
+    chains = n_chains,
     verbose = TRUE,
     adapt_delta = 0.95,
     estimate_breakpoints = TRUE

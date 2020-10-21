@@ -1,12 +1,16 @@
-my_plot_estimates <- function(estimates, 
+my_plot_estimates <- function(reff, 
                               extra_title = "", 
                               caption = "", 
                               y_max = 1500, 
-                              location = " in Victoria"){
+                              location = " in Victoria",
+                              my_theme){
+  
+  
+  
   my_theme <- my_theme +
     theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1)) 
   
-  p <- estimates$plots$summary
+  p <- reff$plots$summary
   
   p1 <- p$patches$plots[[1]] +
     scale_y_continuous(label = comma_format(accuracy = 1)) +
